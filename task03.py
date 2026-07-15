@@ -71,8 +71,23 @@ def make_dataset(kind: str, size: int) -> list[int]:
     if kind == "random":
         return [rng.randint(0, size * 10) for _ in range(size)]
 
+    if kind == "sorted":
+        return list(range(size))
+
     if kind == "reversed":
         return list(range(size, 0, -1))
+
+    if kind == "nearly_sorted":
+        values = list(range(size))
+        swaps_count = max(1, size // 100)
+        for _ in range(swaps_count):
+            first_index = rng.randrange(size)
+            second_index = rng.randrange(size)
+            values[first_index], values[second_index] = (
+                values[second_index],
+                values[first_index],
+            )
+        return values
 
     if kind == "many_duplicates":
         return [rng.randint(0, 20) for _ in range(size)]
@@ -111,7 +126,9 @@ def main() -> None:
     """Start the sorting algorithm comparison."""
     dataset_kinds = [
         "random",
+        "sorted",
         "reversed",
+        "nearly_sorted",
         "many_duplicates",
     ]
 
